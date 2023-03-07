@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "aitana",
+    "slug": "aitana",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./home/assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./home/assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./home/assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.tesis.aitana"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "861d65cf-3a02-4a9a-acb7-47893d53bcfb"
+      }
+    }
+  }
+}
