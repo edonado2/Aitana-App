@@ -1,26 +1,71 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { Card } from 'react-native-elements';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import auth from '@react-native-firebase/auth';
 import RecoverPass from './RecoverPass';
+import axios from 'axios';
 
-
+const API_URL = 'http://192.168.3.101:8000';
 const LoginScreen = ({ navigation }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
     const [error, setError] = useState(null);
+    const [message, setMessage] = useState('');
+    const [isLogin, setIsLogin] = useState(true);
 
-    const handleLogin = () => {
-        // validate form inputs
-        if (!email || !password) {
-            Alert.alert('Datos Incorrectos', 'Por favor ingrese los datos requeridos.');
-            return;
-        }
-        // send login data to server
-        login(email, password);
-    }
+    const onLoggedIn = (token) => {
+        axios.post(`${API_URL}/private`, {}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(async (res) => {
+                try {
+                    const jsonRes = res.data;
+                    if (res.status === 200) {
+                        setMessage(jsonRes.message);
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    const onSubmitHandler = () => {
+        const payload = {
+            email,
+            name,
+            password,
+        };
+        axios.post(`${API_URL}/${isLogin ? 'login' : 'signup'}`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(async (res) => {
+                try {
+                    const jsonRes = res.data;
+                    if (res.status !== 200) {
+                        setError(true);
+                        setMessage(jsonRes.message);
+                    } else {
+                        onLoggedIn(jsonRes.token);
+                        setError(false);
+                        setMessage(jsonRes.message);
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     return (
         <View style={styles.container}>
@@ -49,11 +94,11 @@ const LoginScreen = ({ navigation }) => {
                     secureTextEntry={true}
                 />
 
-                <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                {error && <Text style={{ color: 'red', paddingLeft: 0 }}>{error}</Text>}
+
+                <TouchableOpacity style={styles.button} onPress={onSubmitHandler}>
                     <Text style={styles.buttonText}>Iniciar Sesión</Text>
                 </TouchableOpacity>
-
-                {error && <Text>{error}</Text>}
 
                 <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('ResetPass')}>
                     <Text style={styles.linkText}>Recuperar Contraseña</Text>
