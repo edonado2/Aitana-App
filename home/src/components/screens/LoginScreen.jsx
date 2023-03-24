@@ -4,7 +4,7 @@ import { Card } from 'react-native-elements';
 import RecoverPass from './RecoverPass';
 import axios from 'axios';
 
-const API_URL = 'http://192.168.3.101:8000';
+const API_URL = 'http://192.168.3.101:8070';
 const LoginScreen = ({ navigation }) => {
 
     const [email, setEmail] = useState('');
@@ -26,6 +26,7 @@ const LoginScreen = ({ navigation }) => {
                     const jsonRes = res.data;
                     if (res.status === 200) {
                         setMessage(jsonRes.message);
+                        navigation.navigate('Home');
                     }
                 } catch (err) {
                     console.log(err);
@@ -38,11 +39,11 @@ const LoginScreen = ({ navigation }) => {
 
     const onSubmitHandler = () => {
         const payload = {
-            email,
-            name,
-            password,
+            email: email,
+            name: name,
+            password: password,
         };
-        axios.post(`${API_URL}/${isLogin ? 'login' : 'signup'}`, payload, {
+        axios.post(`${API_URL}/login`, payload, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -57,6 +58,7 @@ const LoginScreen = ({ navigation }) => {
                         onLoggedIn(jsonRes.token);
                         setError(false);
                         setMessage(jsonRes.message);
+                        navigation.navigate('Home');
                     }
                 } catch (err) {
                     console.log(err);

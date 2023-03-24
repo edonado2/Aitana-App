@@ -16,6 +16,7 @@ router.get('/public', (req, res, next) => {
 
 // will match any other path
 router.use('/', (req, res, next) => {
+    console.log(req.path)
     res.status(404).json({ error: "page not found" });
 });
 

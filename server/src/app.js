@@ -23,4 +23,4 @@ app.use(cors());
 
 sequelize.sync();
 
-app.listen(8000);
+app.listen(8070);

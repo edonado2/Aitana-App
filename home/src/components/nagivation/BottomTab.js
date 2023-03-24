@@ -15,41 +15,41 @@ export const BottomTab = () => {
 
     return (
         <Tab.Navigator
-            tabBarPosition = "bottom"
-            screenOptions={ ({ route }) => ({
-            tabBarShowLabel: false,
-            tabBarIcon: ({ focused, color}) => {
-            let iconName = " ";
+            tabBarPosition="bottom"
+            screenOptions={({ route }) => ({
+                tabBarShowLabel: false,
+                tabBarIcon: ({ focused, color }) => {
+                    let iconName = " ";
 
-                switch (route.name){
-                    case "Home":
-                        iconName = focused ? "home" : "home-outline";
-                        break;
-                    case "Help Center":
-                        iconName = focused ? "people" : "people-outline";
-                        break;    
-                    case "Ubicacion":
-                        iconName = focused ? "locate" : "locate-outline";
-                        break;  
-                    case "Formulario":
-                        iconName = focused ? "folder": "folder-outline";
-                        break;
-                    case "Configuracion":
-                        iconName = focused ? "person": "person-outline";
-                        break;       
-                }
+                    switch (route.name) {
+                        case "Home":
+                            iconName = focused ? "home" : "home-outline";
+                            break;
+                        case "Help Center":
+                            iconName = focused ? "people" : "people-outline";
+                            break;
+                        case "Ubicacion":
+                            iconName = focused ? "locate" : "locate-outline";
+                            break;
+                        case "Formulario":
+                            iconName = focused ? "folder" : "folder-outline";
+                            break;
+                        case "Configuracion":
+                            iconName = focused ? "person" : "person-outline";
+                            break;
+                    }
 
-            return <Icon name={iconName} size={24} color = {color}/>;
+                    return <Icon name={iconName} size={24} color={color} />;
                 },
-            tabBarActiveTintColor: '#202020',
-            tabBarInactiveTintColor: '#757575',
-            tabBarPressColor: "transparent",
-            tabBarIndicatorStyle:{
-                borderBottomColor: "#fff",
-                borderBottomWidth: 2
-            }
+                tabBarActiveTintColor: '#202020',
+                tabBarInactiveTintColor: '#757575',
+                tabBarPressColor: "transparent",
+                tabBarIndicatorStyle: {
+                    borderBottomColor: "#fff",
+                    borderBottomWidth: 2
+                }
             })
-        }
+            }
         >
             <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen name="Help Center" component={HelpCenterScreen} />
@@ -59,3 +59,5 @@ export const BottomTab = () => {
         </Tab.Navigator>
     );
 }
+
+export default BottomTab;

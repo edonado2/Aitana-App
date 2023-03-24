@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../src/components/screens/LoginScreen';
 import SignUpScreen from '../src/components/screens/SignUpScreen';
 import RecoverPass from '../src/components/screens/RecoverPass';
+import BottomTab from '../src/components/nagivation/BottomTab';
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
@@ -15,6 +16,7 @@ const AppNavigator = () => {
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={SignUpScreen} />
             <Stack.Screen name="ResetPass" component={RecoverPass} />
+            <Stack.Screen name="Home" component={BottomTab} />
         </Stack.Navigator>
     );
 };

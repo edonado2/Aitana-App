@@ -22,8 +22,8 @@ const signup = (req, res, next) => {
                     } else if (passwordHash) {
                         return User.create(({
                             email: req.body.email,
-                            name: req.body.name,
-                            password: passwordHash,
+                            nombre: req.body.name,
+                            contrasena: passwordHash,
                         }))
                             .then(() => {
                                 res.status(200).json({ message: "user created" });
@@ -34,7 +34,7 @@ const signup = (req, res, next) => {
                             });
                     };
                 });
-            } else if (!req.body.password) {
+            } else if (!req.body.contrasena) {
                 return res.status(400).json({ message: "password not provided" });
             } else if (!req.body.email) {
                 return res.status(400).json({ message: "email not provided" });
@@ -53,13 +53,22 @@ const login = (req, res, next) => {
         }
     })
         .then(dbUser => {
+
             if (!dbUser) {
-                return res.status(404).json({ message: "user not found" });
+                return res.status(200).json({
+                    message: "user not found",
+                    success: false,
+                    result: dbUser,
+
+                });
             } else {
                 // password hash
-                bcrypt.compare(req.body.password, dbUser.password, (err, compareRes) => {
+                bcrypt.compare(req.body.password, dbUser.contrasena.replace('$2y$', '$2a$'), (err, compareRes) => {
                     if (err) { // error while comparing
-                        res.status(502).json({ message: "error while checking user password" });
+                        res.status(502).json({
+                            message: "error while checking user password",
+                            error: err.message,
+                        });
                     } else if (compareRes) { // password match
                         const token = jwt.sign({ email: req.body.email }, 'secret', { expiresIn: '1h' });
                         res.status(200).json({ message: "user logged in", "token": token });

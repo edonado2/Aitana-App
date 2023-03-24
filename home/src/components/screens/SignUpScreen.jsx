@@ -3,8 +3,9 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { Card } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
+import axios from 'axios';
 
-
+const API_URL = 'http://192.168.3.101:8070';
 const SignUpScreen = ({ navigation }) => {
 
 
@@ -17,14 +18,13 @@ const SignUpScreen = ({ navigation }) => {
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     const handleRegistration = () => {
-
         // validate form inputs
         if (!name || !email || !password || !confirmPassword) {
-            setError('Intenta nuevamente, Por favor llene todos los campos requeridos.');
+            setError('Por favor llene todos los campos');
             return;
         }
         if (!emailRegex.test(email)) {
-            setError('Por favor ingrese un correo electrónico válido');
+            setError('Por favor, introduzca una dirección de correo electrónico válida.');
             return;
         }
         if (password !== confirmPassword) {
@@ -32,27 +32,35 @@ const SignUpScreen = ({ navigation }) => {
             return;
         }
         if (password.length < 6) {
-            setError("La contraseña debe tener al menos 6 caracteres.")
+            setError('La contraseña debe tener al menos 6 caracteres.')
             return;
         }
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
         if (!passwordRegex.test(password)) {
-            setError('La contraseña debe tener al menos una letra, un número y un caracter especial');
-
-            // send registration data to server
-            // navigate to login screen
-        } else {
-
-            Alert.alert(
-                'Tu cuenta ha sido creada',
-                'Ya puedes comenzar a utilizar la app',
-                [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
-                { cancelable: false }
-            );
-            register(email, password)
+            setError('La contraseña debe contener al menos una letra, una mayúscula un número y un carácter especial. (@,#,*)');
+            return;
         }
-    }
 
+        // send registration data to server
+        axios.post(`${API_URL}/signup`, {
+            name,
+            email,
+            password,
+        })
+            .then(response => {
+                Alert.alert(
+                    'La cuenta se ha creado correctamente',
+                    'Ya puedes empezar a utilizar la aplicación',
+                    [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+                    { cancelable: false }
+                );
+                // navigate to login screen
+            })
+            .catch(error => {
+                setError('Intente nuevamente.');
+                console.error(error);
+            });
+    }
     return (
         <View style={styles.container}>
             <ScrollView>
