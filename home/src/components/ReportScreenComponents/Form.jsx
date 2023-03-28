@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import moment from 'moment/moment';
-import { MaterialIcons } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Form = () => {
 
@@ -18,11 +18,6 @@ const Form = () => {
     reporterCode: '',
     reporterCellphone: '',
     aggressors: [
-      // {
-      //   denouncedName: '',
-      //   denouncedLastname: '',
-      //   denouncedCode: '',
-      // }
     ],
     place: '',
     date: '',
@@ -37,24 +32,6 @@ const Form = () => {
     denouncedCode: '',
   })
 
-  // const [example, setExample] = useState({
-  //   reporterName: '',
-  //   reporterLastname: '',
-  //   reporterCode: '',
-  //   reporterCellphone: '',
-  //   aggressors: [
-  //     // {
-  //     //   denouncedName: '',
-  //     //   denouncedLastname: '',
-  //     //   denouncedCode: '',
-  //     // }
-  //   ],
-  //   place: '',
-  //   date: '',
-  //   time: '',
-  //   report: '',
-  //   reportType: '',
-  // })
 
   const [reportDate, setReportDate] = useState(new Date())
   const [reportTime, setReportTime] = useState(new Date())
@@ -127,18 +104,6 @@ const Form = () => {
 
   {/* Esta función requiere validaciones */ }
   const onPress = () => {
-    // console.log(data)
-
-    // if (data.reporterName === '') {
-    //   return alert('Nombre del denunciante requerido')
-    // }
-
-    // if (data.reporterLastname === '') {
-    //   return alert('Apellido del denunciante requerido')
-    // }
-
-    // if (data.reporterCode === '') {
-    //   return alert('Cédula del denunciante requerido')
 
 
     alert('Datos registrados con éxito!')
@@ -246,10 +211,10 @@ const Form = () => {
   }
 
   const TABLE_DATA = data.aggressors.map(({ denouncedName, denouncedLastname, denouncedCode }, index) => [
-    index + 1, 
-    denouncedName, 
-    denouncedLastname, 
-    denouncedCode, 
+    index + 1,
+    denouncedName,
+    denouncedLastname,
+    denouncedCode,
     <View style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
       <MaterialIcons name="cancel" size={24} color="red" onPress={() => removeAggressor(denouncedCode)} />
     </View>
@@ -375,8 +340,8 @@ const Form = () => {
           <View style={styles.container}>
             <Text style={{ marginBottom: 8, fontSize: 16, color: "#6B7280", fontFamily: "OpenSans_700Bold", }}>Lista de denunciado:</Text>
             <Table borderStyle={{ borderWidth: 1, borderColor: '#ffa1d2' }}>
-              <Row data={TABLE_HEADER} style={styles.HeadStyle} textStyle={{ textAlign: 'center', color: '#fff', }}/>
-              <Rows data={TABLE_DATA} textStyle={styles.TableText}/>
+              <Row data={TABLE_HEADER} style={styles.HeadStyle} textStyle={{ textAlign: 'center', color: '#fff', }} />
+              <Rows data={TABLE_DATA} textStyle={styles.TableText} />
             </Table>
           </View>
         )}
@@ -504,18 +469,18 @@ const Form = () => {
 export default Form
 
 const styles = StyleSheet.create({
-  container: { 
+  container: {
     // flex: 1,
     // padding: 18,
     // paddingTop: 35,
-    backgroundColor: '#ffffff', 
+    backgroundColor: '#ffffff',
   },
-  HeadStyle: { 
+  HeadStyle: {
     height: 50,
     alignContent: "center",
     backgroundColor: '#745c98'
   },
-  TableText: { 
+  TableText: {
     // margin: 10
     textAlign: 'center',
     // color: '#fff',

@@ -6,6 +6,8 @@ import useFonts from './home/hooks/useFonts';
 import LoginScreen from './home/src/components/screens/LoginScreen';
 import HomeScreen from './home/src/components/screens/HomeScreen';
 import AppNavigator from './home/navigation/AppNavigator';
+import { Provider } from 'react-redux';
+import store from './home/src/reduxStore/reduxStore';
 
 
 export default function RegisterScreen(props) {
@@ -30,9 +32,11 @@ export default function RegisterScreen(props) {
   }
 
   return (
-    <NavigationContainer>
-      {isLoggedIn ? <BottomTab /> : <AppNavigator />}
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        {isLoggedIn ? <BottomTab /> : <AppNavigator />}
+      </NavigationContainer>
+    </Provider>
   );
 }
 

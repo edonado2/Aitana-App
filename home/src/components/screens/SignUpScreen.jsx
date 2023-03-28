@@ -17,7 +17,7 @@ const SignUpScreen = ({ navigation }) => {
 
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-    const handleRegistration = () => {
+    const handleRegistration = async () => {
         // validate form inputs
         if (!name || !email || !password || !confirmPassword) {
             setError('Por favor llene todos los campos');
@@ -35,14 +35,15 @@ const SignUpScreen = ({ navigation }) => {
             setError('La contraseña debe tener al menos 6 caracteres.')
             return;
         }
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
+        const passwordRegex = /^.{4,}$/;
+
         if (!passwordRegex.test(password)) {
-            setError('La contraseña debe contener al menos una letra, una mayúscula un número y un carácter especial. (@,#,*)');
+            setError('La contraseña debe de de 6 digitos contener al menos una letra, una mayúscula un número y un carácter especial. (@,#,*)');
             return;
         }
 
         // send registration data to server
-        axios.post(`${API_URL}/signup`, {
+        await axios.post(`${API_URL}/signup`, {
             name,
             email,
             password,
@@ -51,13 +52,13 @@ const SignUpScreen = ({ navigation }) => {
                 Alert.alert(
                     'La cuenta se ha creado correctamente',
                     'Ya puedes empezar a utilizar la aplicación',
-                    [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+                    [{ text: 'OK', onPress: () => navigation.navigate('Login') }],
                     { cancelable: false }
                 );
                 // navigate to login screen
             })
             .catch(error => {
-                setError('Intente nuevamente.');
+                setError('Intente nuevamente. Este correo ya se encuentra registrado');
                 console.error(error);
             });
     }

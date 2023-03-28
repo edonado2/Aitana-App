@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } fro
 import { Card } from 'react-native-elements';
 import RecoverPass from './RecoverPass';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setUserId } from '../../reduxStore/reduxStore';
 
 const API_URL = 'http://192.168.3.101:8070';
 const LoginScreen = ({ navigation }) => {
@@ -13,6 +15,7 @@ const LoginScreen = ({ navigation }) => {
     const [error, setError] = useState(null);
     const [message, setMessage] = useState('');
     const [isLogin, setIsLogin] = useState(true);
+    const dispatch = useDispatch()
 
     const onLoggedIn = (token) => {
         axios.post(`${API_URL}/private`, {}, {
@@ -27,6 +30,8 @@ const LoginScreen = ({ navigation }) => {
                     if (res.status === 200) {
                         setMessage(jsonRes.message);
                         navigation.navigate('Home');
+                        setEmail('')
+                        setPassword('')
                     }
                 } catch (err) {
                     console.log(err);
@@ -49,6 +54,7 @@ const LoginScreen = ({ navigation }) => {
             },
         })
             .then(async (res) => {
+                console.log(res.data.userId, "respuesta");
                 try {
                     const jsonRes = res.data;
                     if (res.status !== 200) {
@@ -58,8 +64,10 @@ const LoginScreen = ({ navigation }) => {
                         onLoggedIn(jsonRes.token);
                         setError(false);
                         setMessage(jsonRes.message);
+                        dispatch(setUserId(res.data.userId))
                         navigation.navigate('Home');
                     }
+                    console.log(res.data.userId, "userId")
                 } catch (err) {
                     console.log(err);
                 }

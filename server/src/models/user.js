@@ -3,11 +3,17 @@ import { Sequelize } from 'sequelize';
 import sequelize from '../database.js';
 
 const User = sequelize.define('usuarios', {
-    session_id: {
+
+    id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
+    },
+
+    session_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
     },
     nombre: {
         type: Sequelize.STRING,
@@ -25,5 +31,7 @@ const User = sequelize.define('usuarios', {
         allowNull: false,
     },
 });
+
+
 
 export default User;
