@@ -33,27 +33,27 @@ const FormScreen = () => {
 
     const renderItem = ({ item }) => (
         <View style={{ flexDirection: 'row', padding: 20 }}>
-            <Text style={{ flex: 2, padding: 5, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
-                {item.tipo_abuso}
-            </Text>
-            <Text style={{ flex: 1, padding: 5, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
-                {item.lugar_del_acontecimiento}
-            </Text>
-            <Text style={{ flex: 1, padding: 5, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
+            <Text style={{ flex: 1, padding: 2, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
                 {item.fecha_abuso}
             </Text>
-            <Text style={{ flex: 1, padding: 5, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
+            <Text style={{ flex: 1, padding: 2, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
                 {item.hora_acontecimiento}
             </Text>
-            <Text style={{ flex: 1, padding: 5, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
+            <Text style={{ flex: 1, padding: 2, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
+                {item.tipo_abuso}
+            </Text>
+            {/* <Text style={{ flex: 1, padding: 5, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
+                {item.lugar_del_acontecimiento}
+            </Text> */}
+            <Text style={{ flex: 1, padding: 2, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
                 {item.nombre}
             </Text>
-            <Text style={{ flex: 1, padding: 5, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
+            <Text style={{ flex: 1, padding: 2, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
                 {item.apellido}
             </Text>
-            <Text style={{ flex: 1, padding: 5, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
+            {/* <Text style={{ flex: 1, padding: 5, fontSize: Dimensions.get('window').width < 600 ? 12 : 16 }}>
                 {item.cedula}
-            </Text>
+            </Text> */}
         </View>
     );
 

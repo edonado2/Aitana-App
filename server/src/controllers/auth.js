@@ -203,29 +203,38 @@ const updatePassword = (req, res, next) => {
 
 const sendDenuncia = async (req, res, next) => {
     try {
-        const { id_denunciado, descripcion } = req.body;
-        const id_denunciante = req.params.userId;
+        const usuario_id = req.params.userId;
 
-        const { nombre: denunciante_nombre, apellido: denunciante_apellido, cedula: denunciante_cedula } = req.body.denunciante;
-        const { nombre: denunciado_nombre, apellido: denunciado_apellido, cedula: denunciado_cedula, telefono: denunciado_telefono } = req.body.denunciado;
+        // Insert denunciante into the database
+        const [denunciante, createdDenunciante] = await sequelize.query(`
+            INSERT INTO denunciantes(nombre, apellido, cedula, telefono, usuario_id) 
+            VALUES ('${req.body.denunciante.nombre}', '${req.body.denunciante.apellido}', '${req.body.denunciante.cedula}', '${req.body.denunciante.telefono}', ${Number(usuario_id)})
+        `);
 
-        const [denunciante, createdDenunciante] = await sequelize.query(
-            `INSERT INTO Denunciantes (nombre, apellido, cedula, usuario_id) VALUES ('${denunciante_nombre}', '${denunciante_apellido}', '${denunciante_cedula}', ${id_denunciante}) ON DUPLICATE KEY UPDATE nombre='${denunciante_nombre}', apellido='${denunciante_apellido}';`
-        );
+        const id_denunciante = createdDenunciante ? denunciante.insertId : denunciante[0];
 
-        const [denunciado, createdDenunciado] = await sequelize.query(
-            `INSERT INTO Denunciados (nombre, apellido, cedula, id_denunciante) VALUES ('${denunciado_nombre}', '${denunciado_apellido}', '${denunciado_cedula}', ${id_denunciante}) ON DUPLICATE KEY UPDATE nombre='${denunciado_nombre}', apellido='${denunciado_apellido}'`
-        );
+        // Insert or find denunciado
+        const [denunciado, createdDenunciado] = await sequelize.query(`
+            INSERT INTO denunciados(nombre, apellido, cedula, id_denunciante) 
+            VALUES ('${req.body.denunciado.nombre}', '${req.body.denunciado.apellido}', '${req.body.denunciado.cedula}', '${id_denunciante}')
+            ON DUPLICATE KEY UPDATE id=id
+        `);
 
+        const id_denunciado = createdDenunciado ? denunciado.insertId : denunciado[0];
 
-        const [denuncia, createdDenuncia] = await sequelize.query(
-            `INSERT INTO Denuncias (id_denunciante, id_denunciado, descripcion, fecha) VALUES (${denunciante.insertId}, ${denunciado.insertId}, '${descripcion}', NOW())`
-        );
+        // Insert denuncia into the database
+        const [denuncia, createdDenuncia] = await sequelize.query(`
+            INSERT INTO denuncias( tipo_abuso, descripcion, lugar_del_acontecimiento, fecha_abuso, hora_acontecimiento, id_denunciado) 
+            VALUES ('${req.body.tipo_abuso}', '${req.body.descripcion}','${req.body.lugar_del_acontecimiento}','${req.body.fecha_abuso}','${req.body.hora_acontecimiento}','${id_denunciado}')
+        `);
+
+        const id_denuncia = createdDenuncia ? denuncia.insertId : denuncia[0];
 
         res.status(201).json({
             message: 'Denuncia created successfully',
             denuncia,
         });
+
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: 'Error while creating the denuncia' });

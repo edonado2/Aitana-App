@@ -28,4 +28,5 @@ const Denunciado = sequelize.define('Denunciado', {
     },
 });
 
+
 export default Denunciado;

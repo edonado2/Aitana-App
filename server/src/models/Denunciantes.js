@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 import sequelize from '../database';
+import User from './user';
 class Denunciante extends Model { }
 
 Denunciante.init({
@@ -7,34 +8,33 @@ Denunciante.init({
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false
     },
     nombre: {
-        type: DataTypes.STRING(50),
-        allowNull: false
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     apellido: {
-        type: DataTypes.STRING(50),
-        allowNull: false
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     cedula: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
     },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
+    usuario_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: User,
+            key: 'id'
+        }
     },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
-    }
 }, {
     sequelize,
-    modelName: 'Denunciante'
+    modelName: 'Denunciante',
 });
+
+Denunciante.belongsTo(User, { foreignKey: 'usuario_id' });
 
 export default Denunciante;

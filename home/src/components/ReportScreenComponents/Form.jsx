@@ -8,8 +8,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import moment from 'moment/moment';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
 
 const Form = () => {
+
 
   /* Campos a validar */
   const [data, setData] = useState({
@@ -17,8 +19,7 @@ const Form = () => {
     reporterLastname: '',
     reporterCode: '',
     reporterCellphone: '',
-    aggressors: [
-    ],
+    aggressors: [],
     place: '',
     date: '',
     time: '',
@@ -31,6 +32,45 @@ const Form = () => {
     denouncedLastname: '',
     denouncedCode: '',
   })
+
+  const { userId } = useSelector(state => state.auth);
+
+  const handleSubmit = async () => {
+
+    console.log(data, "data retornada")
+    try {
+      const response = await fetch(`http://192.168.3.101:8070/denuncia/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          denunciante: {
+            nombre: data.reporterName,
+            apellido: data.reporterLastname,
+            cedula: data.reporterCode,
+            telefono: data.reporterCellphone
+          },
+          denunciados: [
+            {
+              nombre: data.denouncedName,
+              apellido: data.denouncedLastname,
+              cedula: data.denouncedCode
+            },
+            // add more denunciados here if needed
+          ]
+        })
+      });
+
+      const result = await response.json();
+
+      // Handle the response from the backend
+    } catch (error) {
+      console.error(error);
+      // Handle the error
+    }
+  };
+
 
 
   const [reportDate, setReportDate] = useState(new Date())
@@ -131,6 +171,7 @@ const Form = () => {
 
     setData((state) => ({ ...state, aggressors: [...state.aggressors, denounced] }))
     setDenounced({ denouncedName: '', denouncedLastname: '', denouncedCode: '', })
+
 
     alert('Demandado agregado.')
   }
@@ -281,7 +322,7 @@ const Form = () => {
             keyboardType='numeric'
             onFocus={() => onFocus('reportCellphone')}
             onBlur={() => onBlur('reportCellphone')}
-            onChangeText={(text) => setData((state) => ({ ...state, reporterCode: !Number(text) || Number(text) === 'NaN' ? state.reporterCellphone : text }))}
+            onChangeText={(text) => setData((state) => ({ ...state, reporterCellphone: !Number(text) || Number(text) === 'NaN' ? state.reporterCellphone : text }))}
             maxLength={11}
           />
         </View>
@@ -436,9 +477,21 @@ const Form = () => {
           />
         </View>
 
-        <Pressable style={{ marginBottom: 32, alignItems: "center", justifyContent: "center", height: 48, borderRadius: 24, elevation: 3, backgroundColor: "#745c98", }} onPress={onPress}>
-          <Text style={{ fontSize: 16, color: "#fff", }}>Envíar</Text>
+        <Pressable
+          style={{
+            marginBottom: 32,
+            alignItems: "center",
+            justifyContent: "center",
+            height: 48,
+            borderRadius: 24,
+            elevation: 3,
+            backgroundColor: "#745c98",
+          }}
+          onPress={handleSubmit}
+        >
+          <Text style={{ fontSize: 16, color: "#fff" }}>Envíar</Text>
         </Pressable>
+
 
         {datePickerIsOpen && (
           <DateTimePicker
