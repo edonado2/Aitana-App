@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, StyleSheet, } from 'react-native'
+import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-native'
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component'
 import { Link, } from "react-router-native";
 import { ScrollView } from 'react-native-gesture-handler';
@@ -9,9 +9,10 @@ import { Picker } from '@react-native-picker/picker';
 import moment from 'moment/moment';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 const Form = () => {
-
+  const navigation = useNavigation();
 
   /* Campos a validar */
   const [data, setData] = useState({
@@ -37,7 +38,22 @@ const Form = () => {
 
   const handleSubmit = async () => {
 
-    console.log(data, "data retornada")
+    if (
+      !data.reporterName ||
+      !data.reporterLastname ||
+      !data.reporterCode ||
+      // !data.denouncedName ||
+      // !data.denouncedLastname ||
+      // !data.denouncedCode ||
+      !data.place ||
+      !data.date ||
+      !data.time ||
+      !data.report ||
+      !data.reportType
+    ) {
+      alert('Por favor, rellene todos los campos.');
+      return;
+    }
     try {
       const response = await fetch(`http://192.168.3.101:8070/denuncia/${userId}`, {
         method: 'POST',
@@ -58,16 +74,32 @@ const Form = () => {
               cedula: data.denouncedCode
             },
             // add more denunciados here if needed
-          ]
+          ],
+          denuncias: {
+            place: data.place,
+            date: data.date,
+            time: data.time,
+            report: data.report,
+            reportType: data.reportType
+          }
         })
       });
 
       const result = await response.json();
 
-      // Handle the response from the backend
+      if (response.ok) {
+        Alert.alert(
+          'La denuncia se ha creado correctamente',
+          'Estaremos en contacto ante cualquier novedad',
+          [{ text: 'OK', onPress: () => navigation.navigate('Home') }],
+          { cancelable: false }
+        );
+      } else {
+        alert('Denuncia fallida.');
+      }
     } catch (error) {
       console.error(error);
-      // Handle the error
+      alert('Se ha producido un error al enviar la denuncia.');
     }
   };
 
@@ -539,4 +571,5 @@ const styles = StyleSheet.create({
     // color: '#fff',
   }
 });
+
 

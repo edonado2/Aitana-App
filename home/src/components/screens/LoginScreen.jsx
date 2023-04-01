@@ -104,11 +104,10 @@ const LoginScreen = ({ navigation }) => {
                     secureTextEntry={true}
                 />
 
-                {error && <Text style={{ color: 'red', paddingLeft: 0 }}>{error}</Text>}
-
                 <TouchableOpacity style={styles.button} onPress={onSubmitHandler}>
                     <Text style={styles.buttonText}>Iniciar Sesión</Text>
                 </TouchableOpacity>
+                {message !== '' && <Text style={{ color: 'red', textAlign: 'center' }}>{"Correo o contraseña invalida"}</Text>}
 
                 <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('ResetPass')}>
                     <Text style={styles.linkText}>Recuperar Contraseña</Text>
