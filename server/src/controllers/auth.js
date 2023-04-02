@@ -211,25 +211,24 @@ const sendDenuncia = async (req, res, next) => {
             VALUES ('${req.body.denunciante.nombre}', '${req.body.denunciante.apellido}', '${req.body.denunciante.cedula}', '${req.body.denunciante.telefono}', ${Number(usuario_id)})
         `);
 
-        const id_denunciante = createdDenunciante ? denunciante.insertId : denunciante[0];
-
-        // Insert or find denunciado
-        const [denunciado, createdDenunciado] = await sequelize.query(`
-            INSERT INTO denunciados(nombre, apellido, cedula, id_denunciante) 
-            VALUES ('${req.body.denunciados.nombre}', '${req.body.reporterLastname}', '${req.body.reporterCode}', '${id_denunciante}')
-            ON DUPLICATE KEY UPDATE id=id
-        `);
-
-
-        const id_denunciado = createdDenunciado ? denunciado.insertId : denunciado[0];
+        const id_denunciante = denunciante;
 
         // Insert denuncia into the database
         const [denuncia, createdDenuncia] = await sequelize.query(`
-            INSERT INTO denuncias( tipo_abuso, descripcion, lugar_del_acontecimiento, fecha_abuso, hora_acontecimiento, id_denunciado) 
-            VALUES ('${req.body.denuncias.reportType}', '${req.body.denuncias.report}','${req.body.denuncias.place}','${req.body.denuncias.date}','${req.body.denuncias.time}','${id_denunciado}')
+            INSERT INTO denuncias( tipo_abuso, descripcion, lugar_del_acontecimiento, fecha_abuso, hora_acontecimiento, id_denunciante) 
+            VALUES ('${req.body.denuncias.reportType}', '${req.body.denuncias.report}','${req.body.denuncias.place}','${req.body.denuncias.date}','${req.body.denuncias.time}','${id_denunciante}')
         `);
 
-        const id_denuncia = createdDenuncia ? denuncia.insertId : denuncia[0];
+        for (let i = 0; i < req.body.denunciados.length; i++) {
+          const { denouncedName, denouncedLastname, denouncedCode } = req.body.denunciados[i];
+
+          // Insert or find denunciado
+          const [denunciado, createdDenunciado] = await sequelize.query(`
+            INSERT INTO denunciados(nombre, apellido, cedula, id_denuncia) 
+            VALUES ('${denouncedName}', '${denouncedLastname}', '${denouncedCode}', '${denuncia}')
+          `);
+
+        }
 
         res.status(201).json({
             message: 'Denuncia created successfully',
